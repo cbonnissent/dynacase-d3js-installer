@@ -1,0 +1,4 @@
+[submodule "buildTools"]
+	path = buildTools
+	url = https://github.com/Anakeen/dynacase-buildtools.git
+	branch = 3.2
