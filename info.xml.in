@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<module name="dynacase-d3js-installer" version="@VERSION@" release="@RELEASE@">
+
+    <description>D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG and CSS</description>
+
+    <parameters>
+      <param name="d3js" label="d3js url" type="text" default="https://raw.github.com/mbostock/d3/master/d3.js" volatile="yes" onupgrade="W" />
+    </parameters>
+
+    <pre-install>
+    </pre-install>
+
+    <pre-upgrade>
+    </pre-upgrade>
+
+    <post-install>
+        <download href="@d3js" action="programs/d3js_install">
+            <label lang="en">Download and Install d3js</label>
+        </download>
+    </post-install>
+
+    <post-upgrade>
+        <download href="@d3js" action="programs/d3js_install">
+            <label lang="en">Download and Install d3js</label>
+        </download>
+    </post-upgrade>
+
+</module>

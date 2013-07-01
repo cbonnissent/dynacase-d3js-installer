@@ -1,0 +1,71 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Install d3.js JS file into Dynacase context dir
+ *
+ * @author Anakeen 2011
+ * @license http://www.fsf.org/licensing/licenses/agpl-3.0.html GNU Affero General Public License
+ */
+$WIFF_ROOT = getenv("WIFF_ROOT");
+if ($WIFF_ROOT === false) {
+    print "WIFF_ROOT environment variable is not set!\n";
+    exit(1);
+}
+
+$WIFF_CONTEXT_ROOT = getenv("WIFF_CONTEXT_ROOT");
+if ($WIFF_CONTEXT_ROOT === false) {
+    print "WIFF_CONTEXT_ROOT environment variable not set!\n";
+    exit(1);
+}
+
+set_include_path(get_include_path() . PATH_SEPARATOR . $WIFF_CONTEXT_ROOT . PATH_SEPARATOR . "$WIFF_ROOT/include");
+
+$d3js = $argv[1];
+
+if ($d3js === NULL) {
+    print sprintf("Missing d3js file argument\n");
+    exit(1);
+}
+$d3js = realpath($d3js);
+if (!is_file($d3js)) {
+    print sprintf("d3js JS file not found at '%s'\n", $d3js);
+    exit(1);
+}
+
+// Create d3js sub-dir if it does not exists
+if( ! is_dir('lib/d3js') ) {
+  $ret = mkdir('lib/d3js', true);
+    if ($ret === false) {
+        print sprintf("Could not create 'lib/d3js' directory\n");
+        exit(1);
+    }
+    clearstatcache();
+}
+
+// Copy new file
+$content = file_get_contents($d3js);
+if( $content === false ) {
+    print sprintf("Error reading content from '%s'", $d3js);
+    exit(1);
+}
+$tmpfile = tempnam('lib/d3js', 'd3js.tmp');
+if ($tmpfile === false) {
+    print sprintf("Could not create temporary file in 'd3js'\n");
+    exit(1);
+}
+$ret = file_put_contents($tmpfile, $content);
+if( $ret === false ) {
+  print sprintf("Error writing to temporary file '%s'", $tmpfile);
+  unlink($tmpfile);
+  exit(1);
+}
+$d3js_file = 'lib/d3js/d3.js';
+$ret = rename($tmpfile, $d3js_file);
+if( $ret === false ) {
+  print sprintf("Error moving '%s' to '%s'", $tmpfile, $d3js_file);
+  unlink($tmpfile);
+  exit(1);
+}
+
+exit(0);
+?>
